@@ -15,6 +15,7 @@ import ProfilePage from "./Components/Profile";
 import ProblemList from "./Components/ProblemList";
 import ContestBox from "./Components/AddContest";
 import ProblemForm from "./Components/AddProblem";
+import QuestionForm from "./Components/AddQuestion.jsx";
 import CodeEditor from "./Components/TextEditor";
 import ProblemPage from "./Components/ProblemPage";
 import ProtectedComponent from "./Components/Proctected/ProtectedRoute";
@@ -26,6 +27,7 @@ import UserSubmissionPage from "./Components/UserSubmission";
 import StandingsPage from "./Components/StandingPage";
 import OnGoingProblemList from "./Components/ContestOngoing";
 import LoginRequired from "./Components/Proctected/Proctected";
+import Fulscrean from "./Components/Fullscrean.jsx";
 import Navbar from "./HomePageStudent";
 export const userContext = createContext();
 
@@ -72,6 +74,7 @@ function Navigation() {
           <Route exact path="/Profile" element={<ProfilePage />} />
           <Route exact path="/AddContest" element={<ProtectedComponent> <ContestBox /></ProtectedComponent>} />
           <Route exact path="/AddProblem" element={<ProtectedComponent> <ProblemForm /> </ProtectedComponent>} />
+          <Route exact path="/Addquestion" element={<ProtectedComponent> <QuestionForm /> </ProtectedComponent>} />
           <Route exact path="/Submit/:ContestName" element={<CodeEditor />} />
           <Route exact path="/Problem/:ContestName/:ProblemName" element={<ProblemPage />} />
           <Route exact path="/Submissions" element={<LoginRequired><UserSubmissionPage /></LoginRequired>} />
@@ -81,6 +84,7 @@ function Navigation() {
           <Route exact path="/Contests/:ContestName" element={<OnGoingProblemList />} />
           <Route exact path="/Contest/:ContestName" element={<ProblemList />} />
           <Route exact path="/Standings/:ContestName" element={<StandingsPage />} />
+          <Route exact path="/fullscrean" element={<Fulscrean />} />
           <Route exact path="*" element={<HomePage />} />
         </Routes>
       </BrowserRouter>

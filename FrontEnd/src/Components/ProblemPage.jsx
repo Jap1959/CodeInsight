@@ -63,9 +63,8 @@ const ProblemPage = () => {
       <CssBaseline />
       <ResponsiveAppBar />
 
-      <Container sx={{ marginTop: '7rem', marginBottom: '2rem' }} maxWidth="lg">
-
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+<div className="container">
+        <Box sx={{ display:'flex', justifyContent:'center',textAlign:'center', borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} >
             <Tab value={0} label="Dashboard" />
             <Tab value={1} label="Submissions" />
@@ -74,18 +73,20 @@ const ProblemPage = () => {
           </Tabs>
 
         </Box>
+        <div className="problem-container">
+        <div className="problem-dec">
         <center style={{ marginTop: '2rem' }}>
           <Typography variant="h4" gutterBottom>
             {Problem.ProblemName}
           </Typography>
         </center>
-        <Typography style={{ fontSize: '1.2rem', maxWidth: '100rem' }} paragraph>
+        <Typography style={{ fontSize: '1rem', maxWidth: '100rem' }} paragraph>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{Problem.ProblemDescrption}</pre>
         </Typography>
 
         <Typography variant="h5" gutterBottom>
           Constraints:
-          <pre style={{ whiteSpace: 'pre-wrap' }}>
+          <pre style={{ fontSize:'1rem',whiteSpace: 'pre-wrap' }}>
             1 &le; T &le; 20<br />
             1 &le; N &le; 10<sup>5</sup><br />
             0 &le; K &le; 10<sup>6</sup><br />
@@ -143,7 +144,9 @@ const ProblemPage = () => {
             }
           />
         </Card>
-      </Container>
+        </div>
+        </div>
+        </div>
     </>
   );
 };

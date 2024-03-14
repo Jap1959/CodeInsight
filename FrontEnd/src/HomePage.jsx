@@ -41,6 +41,7 @@ const HeroSection = () => {
                 padding: '4rem 0',
             }}
         >
+        <div className="hero-section">
             <Container maxWidth="md">
                 <Typography variant="h2" align="center" gutterBottom>
                     Welcome to Our Platform
@@ -66,6 +67,7 @@ const HeroSection = () => {
                     </Grid>
                 </Grid>
             </Container>
+            </div>
         </Box>
     );
 };
