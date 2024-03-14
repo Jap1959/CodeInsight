@@ -43,7 +43,7 @@ const HeroSection = () => {
         >
         <div className="hero-section">
             <Container maxWidth="md">
-                <Typography variant="h2" align="center" gutterBottom>
+                <Typography sx={{color:"white"}} variant="h2" align="center" gutterBottom>
                     Welcome to Our Platform
                 </Typography>
                 <Typography variant="h5" align="center" paragraph>

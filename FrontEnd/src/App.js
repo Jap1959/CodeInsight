@@ -28,6 +28,7 @@ import StandingsPage from "./Components/StandingPage";
 import OnGoingProblemList from "./Components/ContestOngoing";
 import LoginRequired from "./Components/Proctected/Proctected";
 import Fulscrean from "./Components/Fullscrean.jsx";
+import Quiz from "./Components/quiz.jsx";
 import Navbar from "./HomePageStudent";
 export const userContext = createContext();
 
@@ -85,6 +86,7 @@ function Navigation() {
           <Route exact path="/Contest/:ContestName" element={<ProblemList />} />
           <Route exact path="/Standings/:ContestName" element={<StandingsPage />} />
           <Route exact path="/fullscrean" element={<Fulscrean />} />
+          <Route exact path="/quiz" element={<Quiz />} />
           <Route exact path="*" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
