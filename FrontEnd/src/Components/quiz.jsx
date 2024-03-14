@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Container, Box, Grid, List, ListItem, ListItemText, Radio, RadioGroup, FormControlLabel, Button } from '@mui/material';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import ResponsiveAppBar from './Navbar';
 
 const quizData = [
   {
@@ -34,6 +37,7 @@ const quizData = [
   },
 ];
 
+
 const styles = {
   questionContainer: {
     marginBottom: '24px',
@@ -47,6 +51,30 @@ const styles = {
 };
 
 function Quiz() {
+
+// const [quizData,setQuizData]=useState([])
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const res = await axios.get('/GetContestNames');
+  //       if (res.data.status === 200) {
+  //         (res.data.Data);
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
+
+
+
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const Name = searchParams.get('name');
+  console.log(Name)
+
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState(Array(quizData.length).fill(''));
 
@@ -74,15 +102,21 @@ function Quiz() {
     setSelectedAnswers(updatedAnswers);
   };
 
+  const handleSubmit = () => {
+    console.log('Selected answers:', selectedAnswers);
+  };
+
   return (
+    <>
+    <ResponsiveAppBar />
     <Container>
-      <Box mt={2} mb={4}>
+      <Box mt={20} mb={4}>
         <Typography variant="h4" gutterBottom>
-          Quiz
+          Quiz ({Name})
         </Typography>
       </Box>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={styles.questionContainer}>
           <Typography variant="body1">
             Question {currentPage + 1}: {quizData[currentPage].question}
           </Typography>
@@ -109,15 +143,21 @@ function Quiz() {
           <Typography variant="body1">
             Page {currentPage + 1} of {quizData.length}
           </Typography>
-          <Button onClick={handleClearAnswer} variant="outlined" color="secondary">
+          <Button onClick={handleClearAnswer} variant="contained" color="secondary">
             Clear Answer
           </Button>
           <Button onClick={handleNextPage} disabled={currentPage === quizData.length - 1}>
-            {currentPage < quizData.length - 1 ? "Next" : "Finish"}
+            Next
           </Button>
+          {currentPage === quizData.length - 1 && (
+            <Button onClick={handleSubmit} variant="contained" color="primary">
+              Submit
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Container>
+    </>
   );
 }
 
