@@ -33,24 +33,7 @@ const LeaderBoard = () => {
     });
     // Simulate a data fetching delay
     useEffect(() => {
-        async function fetchStatus() {
-
-            try {
-                const res = await axios.get('/Network');
-                if (res.data.status === 200) {
-                    fetchData();
-                } else {
-                    setAlert({
-                        severity: 'error',
-                        message: res.data.message,
-                    });
-                    setLoading(false);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        fetchStatus();
+        fetchData();
     }, []);
     async function fetchData() {
         try {

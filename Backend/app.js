@@ -26,6 +26,7 @@ app.use(cookieparser());
 
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const { log } = require('console');
 app.use(cookieParser());
 mongoose.connect("mongodb://127.0.0.1:27017/CodeInsights", {
     useNewUrlParser: true,
@@ -69,6 +70,11 @@ app.get('/Standing/:id/:ContestName', async (req, res) => {
     const result = await standing.GetStandings(req.params.id, req.params.ContestName);
     res.send({ status: 200, Data: result });
 });
+app.get('/leaderboard',async (req,res)=>{
+    const result = await GetData.getuserdata();
+    result.sort((a,b)=>b.total - a.total);
+    res.json(result);
+})
 app.post('/SignUP', async (req, res) => {
     const data = req.body;
     const result = await auth.register(data);
@@ -87,6 +93,7 @@ async function Authenticated(req, res, next) {
 }
 app.post('/Submit', Authenticated, async (req, res) => {
     const result = await Problemsubmit.SubmitProblem(req.body, req.userName);
+    console.log(result);
     res.send(result);
 });
 app.post('/Login', async (req, res) => {
