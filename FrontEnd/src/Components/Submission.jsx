@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
   Paper,
@@ -14,12 +14,20 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from '@mui/material';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import ResponsiveAppBar from './Navbar';
-import { userContext } from '../App';
-const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+} from "@mui/material";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import ResponsiveAppBar from "./Navbar";
+import { userContext } from "../App";
+const options = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+};
 const SubmissionPage = () => {
   const [submissions, setSubmissions] = useState([]);
   const [index, setIndex] = useState(1);
@@ -28,6 +36,10 @@ const SubmissionPage = () => {
 
   useEffect(() => {
     fetchSubmissions(index);
+    const intervalId = setInterval(() => {
+      fetchSubmissions(index);
+    }, 6000);
+    return () => clearInterval(intervalId);
   }, [index]);
 
   async function fetchSubmissions(index) {
@@ -62,27 +74,26 @@ const SubmissionPage = () => {
 
   const getVerdictColor = (verdict) => {
     switch (verdict) {
-      case 'AC':
-        return { color: 'green', text: 'Accepted' };
-      case 'WA':
-        return { color: 'red', text: 'Wrong Answer' };
-      case 'TLE':
-        return { color: 'orange', text: 'Time Limit Exceeded' };
-      case 'CE':
-        return { color: 'blue', text: 'Compilation Error' };
+      case "AC":
+        return { color: "green", text: "Accepted" };
+      case "WA":
+        return { color: "red", text: "Wrong Answer" };
+      case "TLE":
+        return { color: "orange", text: "Time Limit Exceeded" };
+      case "CE":
+        return { color: "blue", text: "Compilation Error" };
       // Add more cases for other verdicts as needed
       default:
-        return { color: 'black', text: verdict };
+        return { color: "black", text: verdict };
     }
   };
-
 
   return (
     <>
       <ResponsiveAppBar />
-      <Container style={{ marginTop: '5rem' }} maxWidth="lg">
+      <Container style={{ marginTop: "5rem" }} maxWidth="lg">
         <center>
-          <Typography variant="h2" style={{ color: 'primary' }} gutterBottom>
+          <Typography variant="h2" style={{ color: "primary" }} gutterBottom>
             Submissions
           </Typography>
         </center>
@@ -103,7 +114,12 @@ const SubmissionPage = () => {
               <TableBody>
                 {submissions.map((submission, index) => (
                   <TableRow
-                   style={{backgroundColor:state.UserName === submissions.UserName?'#bacbff':''}}
+                    style={{
+                      backgroundColor:
+                        state.UserName === submissions.UserName
+                          ? "#bacbff"
+                          : "",
+                    }}
                     key={index}
                     ref={index === submissions.length - 1 ? lastRowRef : null}
                   >
@@ -112,7 +128,12 @@ const SubmissionPage = () => {
                         {submission.Submissionid}
                       </Link>
                     </TableCell>
-                    <TableCell>{new Date(submission.Date).toLocaleDateString('en', options)}</TableCell>
+                    <TableCell>
+                      {new Date(submission.Date).toLocaleDateString(
+                        "en",
+                        options
+                      )}
+                    </TableCell>
                     <TableCell>{submission.UserName}</TableCell>
                     <TableCell>{submission.ProblemName}</TableCell>
                     <TableCell>
@@ -125,9 +146,10 @@ const SubmissionPage = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography
-                      >
-                        {submission.Language === 'cpp' ? 'C++' : submission.Language || 'C++'}
+                      <Typography>
+                        {submission.Language === "cpp"
+                          ? "C++"
+                          : submission.Language || "C++"}
                       </Typography>
                     </TableCell>
                     <TableCell>{submission.Time} ms</TableCell>

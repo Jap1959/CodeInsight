@@ -3,6 +3,7 @@ const app = express();
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const auth = require("./auth/auth");
+const path = require("path");
 const cookieparser = require("cookie-parser");
 const token = require("./auth/AuthToken");
 const leaderboard = require("./Database/GetData/GetUserData");
@@ -12,10 +13,13 @@ const GetData = require("./Database/GetData/Submissions");
 const standing = require("./Database/GetData/GetStandings");
 const AddContest = require("./Contest/AddContest");
 const multer = require("multer");
+const { createLogger, transports, format } = require("winston");
+const { combine, timestamp, label, printf } = format;
 const cors = require("cors");
 app.use(cors());
 const Problemsubmit = require("./CompileCode/compile");
 const AddProblem = require("./Contest/AddProblem");
+const AddData = require("./Database/AddData/AddData");
 const expressSession = require("express-session");
 var MongoDBStore = require("connect-mongodb-session")(expressSession);
 app.use(bodyParser.json());
@@ -23,15 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser());
-
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 mongoose
-  .connect("mongodb://127.0.0.1:27017/CodeInsights", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect("mongodb://127.0.0.1:27017/CodeInsights")
   .then(() => console.log("Connection sucessfull....."))
   .catch((err) => console.log(err));
 const store = new MongoDBStore({
@@ -47,6 +47,64 @@ app.use(
     cookie: { maxAge: 24 * 3600000 },
   })
 );
+// Define a custom Winston format
+// const myFormat = printf(({ level, message}) => {
+//   return `${level}: ${message}`;
+// });
+
+// Create a daily rotating file transport for Winston
+// const logger = createLogger({
+//   // format: combine(timestamp(), myFormat),
+//   format: combine(
+//     timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
+//     myFormat
+//   ),
+//   transports: [
+//     new transports.File({
+//       filename: `logs/%DATE%.log`,
+//       datePattern: "YYYY-MM-DD",
+//       prepend: true,
+//       json: false,
+//       zippedArchive: true,
+//       maxSize: "5m",
+//       maxFiles: "1d",
+//     }),
+//   ],
+// });
+
+// Custom format for logging messages
+const myFormat = format.printf(({ level, message, timestamp }) => {
+  return `${timestamp} ${level}: ${message}`;
+});
+
+// Function to create a logger for an individual user
+const createUserLogger = (userId, contestName) => {
+  // Define the directory path for the user's logs
+  const logDir = path.join(__dirname, "logs", contestName);
+
+  // Create the directory if it doesn't exist
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+
+  // Create a logger instance for the user
+  const logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
+      myFormat
+    ),
+    transports: [
+      // Log to a file for the user
+      new transports.File({
+        filename: path.join(logDir, `${userId}.log`),
+        json: false,
+      }),
+    ],
+  });
+
+  return logger;
+};
+
 app.post("/addquestion", async (req, res) => {
   console.log(req.body);
 });
@@ -84,6 +142,11 @@ app.get("/Standing/:id/:ContestName", async (req, res) => {
     req.params.ContestName
   );
   res.send({ status: 200, Data: result });
+});
+app.get("/leaderboard", async (req, res) => {
+  const result = await GetData.getuserdata();
+  result.sort((a, b) => b.total - a.total);
+  res.json(result);
 });
 app.post("/SignUP", async (req, res) => {
   const data = req.body;
@@ -176,6 +239,30 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+// Route to handle incoming log data
+// app.post("/logs", (req, res) => {
+//   console.log(req.body);
+//   const { key, timestamp, UserName } = req.body; // Assuming log data is sent as JSON
+//   const msg = "pressed :" + key +" " +"Username :" + UserName;
+
+//   logger.info(` ${timestamp}: ${msg}`);
+//   res.sendStatus(200);
+// });
+
+// Route to handle logging
+app.post("/logs", async (req, res) => {
+  const { ContestName, UserName, key } = req.body;
+  const logger = createUserLogger(UserName, ContestName);
+
+  const result = await AddData.AddFlag(UserName, ContestName);
+
+  // Log the request parameters
+  logger.info(`user : ${UserName} key pressed : ${key}`);
+
+  // You can add more logging logic here
+  console.log(result);
+  res.send(result);
+});
 app.post("/upload", upload.array("file"), (req, res) => {
   try {
     if (req.files.length === 0) {
