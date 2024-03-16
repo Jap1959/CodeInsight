@@ -17,7 +17,7 @@ async function sendCodeToCompileQueue(code, language, testCases, TimeLimit, id, 
             TimeLimit,
             id,
             Starttime,
-            EndTime,
+            EndTime
         };
 
         const messageString = JSON.stringify(messageObject);

@@ -25,8 +25,9 @@ import { useTheme } from "@emotion/react";
 import { IoCopyOutline } from "react-icons/io5";
 import axios from "axios";
 import AceEditor from "react-ace";
+import { userContext } from "../App";
 
-const ProblemPage = () => {
+const ProblemPageOngoing = () => {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const [Problem, setProblem] = useState({});
@@ -88,7 +89,7 @@ const ProblemPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedProblem, setSelectedProblem] = useState(0);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [CustomTest, setCustomTest] = useState('');
+  const [CustomTest, setCustomTest] = useState("");
   const history = useNavigate();
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
@@ -102,28 +103,61 @@ const ProblemPage = () => {
       );
     }
   };
+  const { state } = React.useContext(userContext);
 
-  // const handleChange = (event, newValue) => {
-  //   setValue(newValue);
+  useEffect(() => {
+    // Function to log key presses
+    const logKeyPress = async (event) => {
+      const timestamp = new Date().toISOString();
+      try {
+        // Log only 'Esc', 'F11', and 'Alt+Tab' key presses
+        if (
+          event.key === "Escape" ||
+          event.key === "F11" ||
+          (event.altKey && !event.ctrlKey)
+        ) {
+          // Send key press data to the backend
 
-  //   // Redirect or perform actions based on the selected tab
-  //   switch (newValue) {
-  //     case 0:
-  //       history(`/Contest/${ContestName}`);
-  //       break;
-  //     case 1:
-  //       history(`/Submissions/${ContestName}`);
-  //       break;
-  //     case 2:
-  //       history(`/submit/${ContestName}`);
-  //       break;
-  //     case 3:
-  //       history(`/Standings/${ContestName}`);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
+          let key = "";
+          if (event.altKey && !event.ctrlKey) {
+            key = "Alt+Tab";
+          } else {
+            key = event.key;
+          }
+          await axios.post("/logs", {
+            key,
+            timestamp,
+            ContestName: ContestName,
+            UserName: state.UserName,
+          });
+          console.log("Key press logged successfully");
+        }
+      } catch (error) {
+        console.error("Error logging key press:", error);
+      }
+    };
+
+    // Event listener for keydown event
+    const handleKeyDown = (event) => {
+      logKeyPress(event);
+    };
+
+    // Event listener for keyup event
+    const handleKeyUp = (event) => {
+      logKeyPress(event.key);
+    };
+
+    // Add event listeners when the component mounts
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+
+    // Cleanup event listeners when the component unmounts
+    return () => {
+      // Remove event listeners only when the component unmounts
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }); // Include ContestName in the dependency array
 
   useEffect(() => {
     async function fetchData() {
@@ -317,7 +351,7 @@ const ProblemPage = () => {
                   bgcolor: "background.paper",
                 }}
               >
-                <form >
+                <form>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <Typography variant="h5">Code Editor</Typography>
@@ -372,7 +406,11 @@ const ProblemPage = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Button onClick={handleSubmit} variant="contained" color="primary">
+                      <Button
+                        onClick={handleSubmit}
+                        variant="contained"
+                        color="primary"
+                      >
                         Run
                       </Button>
                     </Grid>
@@ -395,7 +433,7 @@ const ProblemPage = () => {
                     multiline
                     minRows={5}
                     value={CustomTest}
-                    onChange={(event)=>setCustomTest(event.target.value)}
+                    onChange={(event) => setCustomTest(event.target.value)}
                     fullWidth
                   />
                 </Typography>
@@ -471,4 +509,4 @@ const ProblemPage = () => {
   );
 };
 
-export default ProblemPage;
+export default ProblemPageOngoing;

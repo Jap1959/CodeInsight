@@ -33,6 +33,7 @@ const LeaderBoard = () => {
     });
     // Simulate a data fetching delay
     useEffect(() => {
+      
         fetchData();
     }, []);
     async function fetchData() {

@@ -10,6 +10,7 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     background: theme.palette.primary.light,
 }));
 
+
 function ProblemList() {
     const [ProblemList, setProblemList] = useState([]);
     const [StartTime, setStartTime] = useState('');
@@ -55,6 +56,7 @@ function ProblemList() {
         }
         fetchDetails();
     }, []);
+   const queryString = `?name=${encodeURIComponent(contestname.ContestName)}`;;
     return (
         <>
             <ResponsiveAppBar />
@@ -104,6 +106,35 @@ function ProblemList() {
                                             </Typography></Link></TableCell>
                                         </TableRow>
                                     ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TableContainer component={Paper} sx={{ marginTop: '2rem', maxWidth: 'md' }}>
+                            <Table>
+                                <StyledTableHead>
+                                    <TableRow >
+                                        <TableCell colSpan={12}>
+                                            <Typography color={'white'} variant="h6" gutterBottom>
+                                                Aptitude Test
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell colSpan={1}>
+                                            <Typography color={'white'} sx={{ textAlign: 'end' }} variant="h6" gutterBottom>
+                                                Submission
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </StyledTableHead>
+                                <TableBody>
+
+                                    <TableRow>
+                                        <TableCell colSpan={12}> <Link to={`/quiz${queryString}`}>   <Typography variant="h6" gutterBottom>
+                                                Aptitude Test 1
+                                            </Typography></Link></TableCell>
+                                        <TableCell colSpan={1}> <Link to={`/quiz${queryString}`} >   <Typography sx={{ textAlign: 'end' }} variant="h6" gutterBottom>
+                                            <PiUsersBold /> X10
+                                        </Typography></Link></TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>

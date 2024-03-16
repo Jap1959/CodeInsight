@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, Button, Grid, Card, CardContent, CssBaseline, } from '@mui/material';
 import StatusBar from "./Components/Status";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const CollaborationSection = () => {
     const companies = ['Company 1', 'Company 2', 'Company 3', 'Company 4', 'Company 5'];
@@ -41,8 +42,9 @@ const HeroSection = () => {
                 padding: '4rem 0',
             }}
         >
+        <div className="hero-section">
             <Container maxWidth="md">
-                <Typography variant="h2" align="center" gutterBottom>
+                <Typography sx={{color:"white"}} variant="h2" align="center" gutterBottom>
                     Welcome to Our Platform
                 </Typography>
                 <Typography variant="h5" align="center" paragraph>
@@ -50,22 +52,14 @@ const HeroSection = () => {
                 </Typography>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item>
-                        <Button variant="contained" color="secondary">
+                      <Link to="/contests">  <Button variant="contained" color="secondary">
                             Upcoming Contests
-                        </Button>
+                        </Button></Link>
                     </Grid>
-                    <Grid item>
-                        <Button variant="outlined" color="secondary">
-                            Features
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="outlined" color="secondary">
-                            Collaborations
-                        </Button>
-                    </Grid>
+                  
                 </Grid>
             </Container>
+            </div>
         </Box>
     );
 };
