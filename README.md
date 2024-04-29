@@ -56,3 +56,11 @@ Start the frontend development server:
 `cd ../frontend && npm start`
 
 Access the application in your browser:Open http://localhost:3000 to view CodeInsights.
+
+Here is some Glimpse of our Website :
+
+![IMG-20240329-WA0014](https://github.com/Jap1959/CodeInsight/assets/96197193/346beded-ce00-4e16-9505-44f38233fc47)
+
+![Leaderboard](https://github.com/Jap1959/CodeInsight/assets/96197193/15f297ab-82de-44c1-9b54-5463a479f119)
+
+
